@@ -1,22 +1,23 @@
-const fs = require('fs');
+const fs = require("fs");
 
 function lerArquivo(caminho) {
   if (!fs.existsSync(caminho)) return [];
-  const raw = fs.readFileSync(caminho, 'utf8').trim();
-  if (raw === '') return [];
-  const linhas = raw.split('\n');
-  return linhas.map(l => l.split(';'));
+  return fs.readFileSync(caminho, "utf8")
+    .trim()
+    .split("\n")
+    .filter(l => l)
+    .map(l => l.split(";"));
 }
 
 function salvarArquivo(caminho, dados) {
-  const conteudo = dados.map(l => l.join(';')).join('\n');
-  fs.writeFileSync(caminho, conteudo, 'utf8');
+  const texto = dados.map(l => l.join(";")).join("\n");
+  fs.writeFileSync(caminho, texto, "utf8");
 }
 
 function proximoId(dados) {
-  if (!dados || dados.length === 0) return '1';
-  const max = Math.max(...dados.map(l => parseInt(l[0], 10) || 0));
-  return String(max + 1);
+  if (dados.length === 0) return 1;
+  const ids = dados.map(l => parseInt(l[0]));
+  return Math.max(...ids) + 1;
 }
 
 module.exports = { lerArquivo, salvarArquivo, proximoId };
